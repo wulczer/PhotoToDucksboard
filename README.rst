@@ -7,6 +7,11 @@ A simple Android app that sends any photo to a Ducksboard custom widget.
 Usage
 =====
 
+Download from
+https://github.com/downloads/wulczer/PhotoToDucksboard/PhotoToDucksboard-release-8592c3c557c2e7a2cc35dd608187811dcd1311bd.apk
+
+Remember to allow installation from untrusted sources.
+
 After installing, sign in to your Ducksboard account by providing the API key
 or the username and password. Once you've done that, you'll be able to use the
 Photo to Ducksboard option from the share image menu to send that image to any
