@@ -17,6 +17,13 @@ or the username and password. Once you've done that, you'll be able to use the
 Photo to Ducksboard option from the share image menu to send that image to any
 custom image widget on any one of your dashboards.
 
+Credit
+======
+
+The original idea came from Antoni Barcia (`ygneo <https://github.com/ygneo>`_)
+and Martín Fuentes (`acuarium <https://github.com/acuarium>`_), I blatantly
+stole and badly implemented it.
+
 Disclaimer
 ==========
 
