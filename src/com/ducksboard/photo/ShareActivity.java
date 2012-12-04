@@ -3,6 +3,8 @@ package com.ducksboard.photo;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -18,7 +21,7 @@ import android.widget.TextView;
 
 public class ShareActivity extends Activity {
 
-    private int CONFIGURE_REQUEST = 1;
+    private static final int CONFIGURE_REQUEST = 1;
 
     private ListView listView;
     private ProgressBar progressBar;
@@ -72,18 +75,61 @@ public class ShareActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode != CONFIGURE_REQUEST) {
-            return;
-        }
-
         if (resultCode != RESULT_OK) {
-            return;
+            finish();
         }
 
+        switch (requestCode) {
+        case CONFIGURE_REQUEST:
+            onConfigureResult(data);
+            break;
+        default:
+            finish();
+        }
+    }
+
+    private void onConfigureResult(Intent data) {
         progressBar.setVisibility(View.VISIBLE);
         infoText.setVisibility(View.VISIBLE);
         button.setVisibility(View.GONE);
         loadWidgetsList();
+    }
+
+    private void sendImage(int position, String caption) {
+        WidgetInfo clicked = this.widgets.get(position);
+        SendInfo info = new SendInfo(uri, apiKey, clicked.label, caption);
+        progressBar.setVisibility(View.VISIBLE);
+        listView.setVisibility(View.GONE);
+        infoText.setText(R.string.sending);
+        new SendImage(ShareActivity.this).execute(info);
+    }
+
+    private void showCaptionDialog(final int position) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+
+        dialog.setTitle(R.string.caption_title);
+        dialog.setMessage(R.string.caption_message);
+
+        final EditText input = new EditText(this);
+        dialog.setView(input);
+
+        dialog.setPositiveButton(R.string.caption_ok,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String caption = input.getText().toString();
+                        sendImage(position, caption);
+                    }
+                });
+        dialog.setNegativeButton(R.string.caption_cancel,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sendImage(position, null);
+                    }
+                });
+        
+        dialog.show();
     }
 
     public void widgetsListLoaded(List<WidgetInfo> widgets) {
@@ -96,12 +142,7 @@ public class ShareActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View v,
                     int position, long id) {
-                WidgetInfo clicked = ShareActivity.this.widgets.get(position);
-                SendInfo info = new SendInfo(uri, apiKey, clicked.label);
-                progressBar.setVisibility(View.VISIBLE);
-                listView.setVisibility(View.GONE);
-                infoText.setText(R.string.sending);
-                new SendImage(ShareActivity.this).execute(info);
+                showCaptionDialog(position);
             }
         };
         listView.setOnItemClickListener(clickListener);

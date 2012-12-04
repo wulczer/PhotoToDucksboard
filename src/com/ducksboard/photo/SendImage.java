@@ -32,7 +32,7 @@ public class SendImage extends AsyncTask<SendInfo, Void, Void> {
         }
 
         String encoded = encodeImage(data);
-        String payload = preparePayload(encoded);
+        String payload = preparePayload(encoded, info[0].caption);
         if (payload == null) {
             return null;
         }
@@ -73,12 +73,15 @@ public class SendImage extends AsyncTask<SendInfo, Void, Void> {
         return "data:image/jpeg;base64," + encoded;
     }
 
-    private String preparePayload(String encoded) {
+    private String preparePayload(String encoded, String caption) {
         JSONObject payload = new JSONObject();
         JSONObject source = new JSONObject();
 
         try {
             source.put("source", encoded);
+            if (caption != null) {
+               source.put("caption", caption);
+            }
             payload.put("value", source);
             return payload.toString();
         } catch (JSONException e) {

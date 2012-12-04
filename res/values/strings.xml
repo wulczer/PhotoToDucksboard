@@ -23,5 +23,9 @@
     <string name="signed_in_as">Signed in as</string>
     <string name="go_to_configuration">Sign in to Ducksboard</string>
     <string name="no_widgets">No image widgets</string>
+    <string name="caption_ok">Use caption</string>
+    <string name="caption_cancel">No caption</string>
+    <string name="caption_title">Choose caption</string>
+    <string name="caption_message">Use a caption?</string>
 
 </resources>
